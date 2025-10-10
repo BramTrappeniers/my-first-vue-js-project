@@ -1,11 +1,25 @@
-<script setup></script>
+<script setup>
+import './reset.css';
+import SevenByFiveGrid from './SevenByFiveGrid.vue';
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div class="full-wrapper">
+    <SevenByFiveGrid />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.full-wrapper {
+  background-color: cyan;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100svh;
+}
+p {
+  text-align: center;
+  background-color: cyan
+}
+</style>
