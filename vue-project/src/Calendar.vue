@@ -34,10 +34,9 @@
               <!-- <div id="calendar-dates"> -->
                 <CalendarDay
                   v-for="day in calendarDays"
-                  :key="day.date"
-                  :date="day.date"
+                  :key="day.eventDay.date"
                   :isCurrentMonth="day.isCurrentMonth"
-                  :events="day.events"
+                  :eventDay="day.eventDay"
                 />
                 <!-- <div
                   v-for="cell in calendarDays"
@@ -62,6 +61,8 @@
 
 <script>
 import CalendarDay from './CalendarDay.vue'
+import { Day } from './Day.js';
+import { Calendar } from './Calendar.js';
 
 export default {
     name: 'Calendar',
@@ -71,39 +72,20 @@ export default {
     data() {
         return {
             selectedMonth: new Date(),
+            calendar: new Calendar(),
         }
     },
     computed: {
         calendarDays() {
-            const year = this.selectedMonth.getFullYear()
-            const month = this.selectedMonth.getMonth()
-            const firstDay = new Date(year, month, 1)
-            const lastDay = new Date(year, month + 1, 0)
-            const daysInMonth = lastDay.getDate()
-            const startingDayOfMonth = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1
-            const endingDayOfMonth = lastDay.getDay() === 0 ? 6 : lastDay.getDay() - 1
-
-            const days = []
-            const today = new Date()
-
-            // Previous month days
-            for (let i = startingDayOfMonth - 1; i >= 0; i--) {
-                days.push({ date: new Date(year, month, 0 - i), isCurrentMonth: false, isToday: false, events: [] })
-            }
-
-            // Current month days
-            for (let i = 1; i <= daysInMonth; i++) {
-                const isToday = i === today.getDate() && month === today.getMonth() && year === today.getFullYear()
-                days.push({ date: new Date(year, month, i), isCurrentMonth: true, isToday, events: ['Event 1', 'Event 2'] })
-            }
-
-            // Next month days
-            const remainingDays = 6 - endingDayOfMonth
-            for (let i = 1; i <= remainingDays; i++) {
-                days.push({ date: new Date(year, month + 1, i), isCurrentMonth: false, isToday: false, events: [] })
-            }
-            
-            return days
+            return this.calendar.getCalendarDaysOfMonth(this.selectedMonth);
+        }
+    },
+    watch: {
+        calendar: {
+            handler(newValue) {
+                localStorage.setItem('calendar', JSON.stringify(this.calendar));
+            },
+            deep: true
         }
     },
     methods: {
@@ -264,14 +246,6 @@ ul {
   background-color: white;
   border-radius: 15%;
   margin-bottom: 3px;
-}
-
-.day {
-  width: 50%;
-  margin: 0px auto;
-  font-size: 30px;
-  position: relative;
-  bottom: 60px;
 }
 
 .current-events {
