@@ -1,5 +1,5 @@
 <template>
-    <div class="calendar-day" :class="{ 'out-of-current-month': !isCurrentMonth }" @click="openModal">
+    <div class="calendar-day" :class="{ 'out-of-current-month': !isCurrentMonth }" @click="isCurrentMonth && openModal()">
         <div class="num-date">{{ dateFormat(eventDay.date, 'DD') }}</div>
         <div class="day-agenda">
             <ul>

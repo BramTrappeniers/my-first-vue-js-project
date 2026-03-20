@@ -21,6 +21,8 @@
                 <div>Nov</div>
                 <div>Dec</div>
             </div> -->
+            <span>{{ workingTime }}</span>
+            <span>{{ workedTime }}</span>
             <div id="calendar-days">
               <!-- <div id="calendar-day-titles"> -->
                 <div class="header-item">MAANDAG</div>
@@ -77,7 +79,13 @@ export default {
     },
     computed: {
         calendarDays() {
-            return this.calendar.getCalendarDaysOfMonth(this.selectedMonth);
+            return this.calendar.getCalendarViewOfMonth(this.selectedMonth).days;
+        },
+        workingTime() {
+            return this.calendar.getWorkingTimeOfMonth(this.selectedMonth);
+        },
+        workedTime () {
+            return this.calendar.getWorkedTimeOfMonth(this.selectedMonth);
         }
     },
     watch: {

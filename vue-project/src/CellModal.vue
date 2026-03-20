@@ -9,7 +9,7 @@
       </div>
       <div class="event-right">
         <div class="event-types">
-          <div v-for="type in workTypes" :key="type.name" @click="selectType(type)" :class="{ 'active': type.active }">
+          <div v-for="type in workTypes" :key="type.name" @click="selectType(type)" :class="{ 'active': selectedCell.hasEvent(type.name) }">
             {{ type.name }}
           </div>
         </div>
@@ -38,9 +38,10 @@ export default {
   },
   data() {
     const workTypes = [
-      {'name': 'Werkdag', active: false},
-      {'name': 'Opleiding', active: false},
-      {'name': 'Vergadering', active: false}
+      {'name': 'Werkdag'},
+      {'name': 'Vakantie'},
+      {'name': 'Opleiding'},
+      {'name': 'Vergadering'}
     ];
 
     return {
@@ -55,8 +56,7 @@ export default {
   },
   methods: {
     selectType(type) {
-      !type.active ? this.selectedCell.addEvent(type.name) : this.selectedCell.removeEvent(type.name);
-      type.active = !type.active;
+      !this.selectedCell.hasEvent(type.name) ? this.selectedCell.addEvent(type.name) : this.selectedCell.removeEvent(type.name);
     },
     handleClose() {
       this.$emit('close');
