@@ -101,7 +101,7 @@ export class Calendar {
 
     getWorkingTimeOfMonth(date) {
         const monthDays = this.getDaysOfMonth(date);
-        return monthDays.reduce((total, day) => total + day.getWorkingTime(), 0);
+        return monthDays.reduce((total, day) => total + day.getWorkingTime()*10, 0)/10;
     }
 
     getWorkedTimeOfMonth(date) {

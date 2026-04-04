@@ -7,22 +7,12 @@
                 <div class="year">{{ dateFormat(selectedMonth, 'MMMM YYYY') }}</div>
                 <div class="triangle-right" @click="nextMonth"></div>
             </div>
-            <!-- <div id="calendar-months">
-                <div>Jan</div>
-                <div>Feb</div>
-                <div class="highlight">Maa</div>
-                <div>Apr</div>
-                <div>Mei</div>
-                <div>Jun</div>
-                <div>Jul</div>
-                <div>Aug</div>
-                <div>Sep</div>
-                <div>Oct</div>
-                <div>Nov</div>
-                <div>Dec</div>
-            </div> -->
-            <span>{{ workingTime }}</span>
-            <span>{{ workedTime }}</span>
+            <div id="data">
+              <div>Sarah Degreef</div>
+              <div></div>
+              <div>Vorig saldo: {{ previousBalance }}</div>
+              <div>Nieuw saldo: {{ newBalance }}</div>
+            </div>
             <div id="calendar-days">
               <!-- <div id="calendar-day-titles"> -->
                 <div class="header-item">MAANDAG</div>
@@ -81,6 +71,12 @@ export default {
         calendarDays() {
             return this.calendar.getCalendarViewOfMonth(this.selectedMonth).days;
         },
+        previousBalance() {
+          return 0
+        },
+        newBalance() {
+          return (this.previousBalance*10 - this.calendar.getWorkingTimeOfMonth(this.selectedMonth)*10 + this.calendar.getWorkedTimeOfMonth(this.selectedMonth)*10)/10;
+        },
         workingTime() {
             return this.calendar.getWorkingTimeOfMonth(this.selectedMonth);
         },
@@ -123,9 +119,6 @@ ul {
   padding: 0;
   margin: 0;
 }
-#container {
-
-}
 #overview-base {
   display: flex;
   width: 30%;
@@ -141,7 +134,7 @@ ul {
   grid-template-columns: 30px auto 30px;
   width: calc(100% - 40px);
   text-align: center;
-  margin: 20px 20px 50px 20px;
+  margin: 40px 20px 20px 20px;
 }
 #calendar-months {
   display: grid;
@@ -153,7 +146,18 @@ ul {
   margin-left: 20px;
   border-bottom: 3px solid #E8E8E8;
 } 
-
+#data {
+  display: grid;
+  width: calc(100% - 40px);
+  grid-template-columns: repeat(4, 1fr);
+  margin-left: 20px;
+  margin-bottom: 40px;
+  margin-top: 20px;
+  border-top: 3px solid #E8E8E8;
+  border-bottom: 3px solid #E8E8E8;
+  padding: 20px 0px;
+  font-weight: bolder;
+}
 #calendar-days {
   display: grid;
   width: calc(100% - 40px);
