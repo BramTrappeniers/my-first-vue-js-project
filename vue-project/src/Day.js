@@ -6,24 +6,26 @@ export class Day {
      * Creates a new Day instance.
      * @param {Date} date - The date for this day.
      * @param {Array} events - The list of events for this day. Defaults to an empty array.
+     * @param {boolean} isHoliday - Whether the day is a holiday. Defaults to false.
      */
-    constructor(date, events = []) {
+    constructor(date, events = [], isHoliday = false) {
         this.date = date;
         this.events = events;
+        this.isHoliday = isHoliday
     }
 
     getWorkingTime() {
         switch (this.date.getDay()) {
             case 1: // Monday
-                return 8;
+                return this.isHoliday ? 2.4 : 8;
             case 2: // Tuesday
-                return 4;
+                return this.isHoliday ? -1.6 : 4;
             case 3: // Wednesday
-                return 4;
+                return this.isHoliday ? -1.6 : 4;
             case 4: // Thursday
-                return 4;
+                return this.isHoliday ? -1.6 : 4;
             case 5: // Friday
-                return 4;
+                return this.isHoliday ? 2.4 : 8;
         }
         return 0;
     }
@@ -32,48 +34,40 @@ export class Day {
         return new Date(this.date.getTime()+ 86400000).getDate() === 1;
     }
 
-    hasEvent(event) {
-        return this.events.indexOf(event) !== -1;
+    hasEvent(eventName) {
+        return this.events.some(event => event.name === eventName);
     }
 
-    getWorkedTime() {
-        if (this.hasEvent('Werkdag')) {
-            switch (this.date.getDay()) {
-                case 0: // Sunday
-                    return this.isLastDayOfMonth() ? 4 : 13.1;
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5: // Monday to Friday
-                    return this.isLastDayOfMonth() ? 2.6 : 11.7;
-                case 6: // Saturday
-                    return this.isLastDayOfMonth() ? 2.6 : 16.6;
+    getWorkedTime(previousDay) {
+        let totalWorkedTime = 0;
+        if (previousDay && previousDay.hasEvent('Werkdag')) {
+            if (this.date.getDay() === 0 || this.isHoliday) { // Sunday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 18 : 14;
+            } else { // Monday to Saturday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 11.7 : 9.1;
+            }
+        } else {
+            if (this.date.getDay() === 0 || this.isHoliday) { // Sunday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 4 : 0;
+            } else { // Monday to Saturday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 2.6 : 0;
             }
         }
-        return 0;
-    }
-
-    getWorkedTimeLastDayPreviousMonth() {
-        if (this.hasEvent('Werkdag')) {
-            switch (this.date.getDay()) {
-                case 0: 
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5: // Sunday to Friday
-                    return 9.1;
-                case 6: // Saturday
-                    return 14;
-            }
+        if (this.hasEvent('Opleiding')) {
+            totalWorkedTime += this.events.find(event => event.name === 'Opleiding').hours;
         }
-        return 0;
+        if (this.hasEvent('Vergadering')) {
+            totalWorkedTime += this.events.find(event => event.name === 'Vergadering').hours;
+        }
+        if (this.hasEvent('Vakantie')) {
+            totalWorkedTime += this.events.find(event => event.name === 'Vakantie').hours;
+        }
+        return totalWorkedTime;
     }
 
     /**
      * Adds an event to the day's event list.
-     * @param {string} event - The event to add.
+     * @param {WorkEvent} event - The event to add.
      */
     addEvent(event) {
         this.events.push(event);
@@ -81,7 +75,7 @@ export class Day {
 
     /**
      * Removes an event from the day's event list.
-     * @param {string} event - The event to remove.
+     * @param {WorkEvent} event - The event to remove.
      */
     removeEvent(event) {
         const index = this.events.indexOf(event);
@@ -96,5 +90,9 @@ export class Day {
      */
     getEventCount() {
         return this.events.length;
+    }
+
+    setHoliday(isHoliday) {
+        this.isHoliday = isHoliday;
     }
 }

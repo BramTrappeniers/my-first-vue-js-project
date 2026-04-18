@@ -16,7 +16,7 @@ export class Calendar {
                 for (const [key2, value2] of Object.entries(value)) {   
                     const days = [];
                     for (const [key3, value3] of Object.entries(value2)) {
-                        days.push(new Day(new Date(value3.date), value3.events));
+                        days.push(new Day(new Date(value3.date), value3.events, value3.isHoliday));
                     }
                     this.calendar[key][key2] = days;
                 }
@@ -106,8 +106,12 @@ export class Calendar {
 
     getWorkedTimeOfMonth(date) {
         const monthDays = this.getDaysOfMonth(date);
-        const previousMonthDays = this.getDaysOfMonth(new Date(date.getFullYear(), date.getMonth(), 0));
-        return previousMonthDays[previousMonthDays.length - 1].getWorkedTimeLastDayPreviousMonth() + monthDays.reduce((total, day) => total + day.getWorkedTime()*10, 0)/10;
+        return monthDays.reduce((total, day, index, array) => total + this.calculateWorkedTimeOfDay(day, index, array)*10, 0)/10;
+    }
+
+    calculateWorkedTimeOfDay(day, index, array) {
+        const previousDay = index > 0 ? array[index - 1] : this.getDaysOfMonth(new Date(day.date.getFullYear(), day.date.getMonth(), 0))[this.getDaysOfMonth(new Date(day.date.getFullYear(), day.date.getMonth(), 0)).length - 1];
+        return day.getWorkedTime(previousDay);
     }
 
 }

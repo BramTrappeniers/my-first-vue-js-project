@@ -8,15 +8,15 @@
                     <li>&nbsp;</li>
                 </template>
                 <template v-else-if="eventDay.events.length === 1">
-                    <li>{{ eventDay.events[0] }}</li>
+                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
                     <li>&nbsp;</li>
                 </template>
                 <template v-else-if="eventDay.events.length === 2">
-                    <li>{{ eventDay.events[0] }}</li>
-                    <li>{{ eventDay.events[1] }}</li>
+                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
+                    <li>{{ eventDay.events[1].name }} ({{ eventDay.events[1].hours > 0 ? eventDay.events[1].hours + 'u' : '' }})</li>
                 </template>
                 <template v-else>
-                    <li>{{ eventDay.events[0] }}</li>
+                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
                     <li>En anderen ...</li>
                 </template>
             </ul>

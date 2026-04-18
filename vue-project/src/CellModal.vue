@@ -2,15 +2,25 @@
   <!-- Modal overlay -->
   <div v-if="isOpen" class="modal-overlay" @click.self="handleClose">
     <div class="modal">
-      <div class="event-left">
+      <div class="event-left" :class="{ 'holiday': selectedCell && selectedCell.isHoliday }">
         <div class="day">{{ dateFormat(selectedCell.date, 'dddd') }}</div>
         <div class="num-date">{{ dateFormat(selectedCell.date, 'DD') }}</div>
         <div class="day">{{ dateFormat(selectedCell.date, 'MMMM') }}</div>
+        <div class="event-types">
+          <div @click="selectedCell.isHoliday = !selectedCell.isHoliday" :class="{ 'active': selectedCell.isHoliday }">
+            Feestdag
+          </div>
+        </div>
       </div>
       <div class="event-right">
         <div class="event-types">
-          <div v-for="type in workTypes" :key="type.name" @click="selectType(type)" :class="{ 'active': selectedCell.hasEvent(type.name) }">
-            {{ type.name }}
+          <div v-for="type in workTypes" :class="{ 'active': selectedCell.hasEvent(type.name) }">
+            <div :key="type.name" @click="selectType(type)">
+              {{ type.name }}
+            </div>  
+            <div v-if="selectedCell.hasEvent(type.name) && type.name.toLowerCase() !== 'werkdag'">
+              Aantal uren {{ type.name.toLowerCase() }}: <input v-model="type.hours" type="number" min="0" max="24" step="0.5">
+            </div>
           </div>
         </div>
         <div class="modal-actions">
@@ -23,6 +33,7 @@
 
 <script>
 import { Day } from './Day.js';
+import { WorkEvent } from './WorkEvent.js';
 
 export default {
   name: "CellModal",
@@ -38,10 +49,10 @@ export default {
   },
   data() {
     const workTypes = [
-      {'name': 'Werkdag'},
-      {'name': 'Vakantie'},
-      {'name': 'Opleiding'},
-      {'name': 'Vergadering'}
+      new WorkEvent('Werkdag'),
+      new WorkEvent('Vakantie'),
+      new WorkEvent('Opleiding', 1),
+      new WorkEvent('Vergadering', 2.5),
     ];
 
     return {
@@ -56,7 +67,7 @@ export default {
   },
   methods: {
     selectType(type) {
-      !this.selectedCell.hasEvent(type.name) ? this.selectedCell.addEvent(type.name) : this.selectedCell.removeEvent(type.name);
+      !this.selectedCell.hasEvent(type.name) ? this.selectedCell.addEvent(type) : this.selectedCell.removeEvent(type);
     },
     handleClose() {
       this.$emit('close');
@@ -119,6 +130,10 @@ body {
   padding-top: 50px;
 }
 
+.event-left.holiday {
+  background-color: #329fec;
+}
+
 .num-date {
   font-size: 150px;
   font-weight: 700;
@@ -131,10 +146,11 @@ body {
 
 .event-types {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   margin-top: 25px;
   margin-left: 25px;
-  column-gap: 10px;
+  margin-right: 25px;
+  row-gap: 10px;
 }
 .event-types div {
   padding: 10px;

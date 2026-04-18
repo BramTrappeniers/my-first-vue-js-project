@@ -55,6 +55,7 @@
 import CalendarDay from './CalendarDay.vue'
 import { Day } from './Day.js';
 import { Calendar } from './Calendar.js';
+import { Timesheet } from './Timesheet';
 
 export default {
     name: 'Calendar',
@@ -65,6 +66,7 @@ export default {
         return {
             selectedMonth: new Date(),
             calendar: new Calendar(),
+            timeSheet: new Timesheet()
         }
     },
     computed: {
@@ -72,7 +74,9 @@ export default {
             return this.calendar.getCalendarViewOfMonth(this.selectedMonth).days;
         },
         previousBalance() {
-          return 0
+          const previousMonth = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth() - 1);
+          console.log('Timesheet data:', this.timeSheet.getTimeSheet(previousMonth));
+          return this.timeSheet.getTimeSheet(previousMonth);
         },
         newBalance() {
           return (this.previousBalance*10 - this.calendar.getWorkingTimeOfMonth(this.selectedMonth)*10 + this.calendar.getWorkedTimeOfMonth(this.selectedMonth)*10)/10;
@@ -98,7 +102,8 @@ export default {
              = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth() - 1)
         },
         nextMonth() {
-            this.selectedMonth = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth() + 1)
+          this.timeSheet.setTimeSheet(this.selectedMonth, this.newBalance);
+          this.selectedMonth = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth() + 1)
         }
     }
 }
