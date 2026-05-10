@@ -2,6 +2,7 @@
  * 
  */
 import { Day } from './Day.js';
+import { WorkEvent } from './WorkEvent.js';
 
 export class Calendar {
     
@@ -16,7 +17,11 @@ export class Calendar {
                 for (const [key2, value2] of Object.entries(value)) {   
                     const days = [];
                     for (const [key3, value3] of Object.entries(value2)) {
-                        days.push(new Day(new Date(value3.date), value3.events, value3.isHoliday));
+                        let events = [];
+                        for (const [key4, value4] of Object.entries(value3.events)) {
+                            events.push(new WorkEvent(value4.name, value4.hours));
+                        }
+                        days.push(new Day(new Date(value3.date), events, value3.isHoliday));
                     }
                     this.calendar[key][key2] = days;
                 }

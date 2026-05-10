@@ -38,16 +38,24 @@ export class Day {
         return this.events.some(event => event.name === eventName);
     }
 
+    getEvent(eventName) {
+        return this.events.find(event => event.name === eventName);
+    }
+
     getWorkedTime(previousDay) {
         let totalWorkedTime = 0;
         if (previousDay && previousDay.hasEvent('Werkdag')) {
-            if (this.date.getDay() === 0 || this.isHoliday) { // Sunday
+            if (this.isHoliday) { // holiday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 12.4 : 8.6;
+            } else if (this.date.getDay() === 0) { // Sunday
                 totalWorkedTime = this.hasEvent('Werkdag') ? 18 : 14;
             } else { // Monday to Saturday
                 totalWorkedTime = this.hasEvent('Werkdag') ? 11.7 : 9.1;
             }
         } else {
-            if (this.date.getDay() === 0 || this.isHoliday) { // Sunday
+            if (this.isHoliday) { // holiday
+                totalWorkedTime = this.hasEvent('Werkdag') ? 2 : 0;
+            } else if (this.date.getDay() === 0) { // Sunday
                 totalWorkedTime = this.hasEvent('Werkdag') ? 4 : 0;
             } else { // Monday to Saturday
                 totalWorkedTime = this.hasEvent('Werkdag') ? 2.6 : 0;
@@ -61,6 +69,9 @@ export class Day {
         }
         if (this.hasEvent('Vakantie')) {
             totalWorkedTime += this.events.find(event => event.name === 'Vakantie').hours;
+        }
+        if (this.hasEvent('Inhaalrust')) {
+            totalWorkedTime += this.events.find(event => event.name === 'Inhaalrust').hours;
         }
         return totalWorkedTime;
     }

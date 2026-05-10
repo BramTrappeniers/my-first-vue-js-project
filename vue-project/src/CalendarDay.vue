@@ -3,21 +3,28 @@
         <div class="num-date">{{ dateFormat(eventDay.date, 'DD') }}</div>
         <div class="day-agenda">
             <ul>
+                <template v-if="eventDay.isHoliday">
+                    <li><strong>Feestdag</strong></li>
+                </template>
                 <template v-if="eventDay.events.length === 0">
                     <li>&nbsp;</li>
                     <li>&nbsp;</li>
+                    <li v-if="!eventDay.isHoliday">&nbsp;</li>
                 </template>
                 <template v-else-if="eventDay.events.length === 1">
-                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
+                    <li>{{ eventDay.events[0].name }} {{ eventDay.events[0].hours > 0 ? '(' + eventDay.events[0].hours + 'u)' : '' }}</li>
                     <li>&nbsp;</li>
+                    <li v-if="!eventDay.isHoliday">&nbsp;</li>
                 </template>
                 <template v-else-if="eventDay.events.length === 2">
-                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
-                    <li>{{ eventDay.events[1].name }} ({{ eventDay.events[1].hours > 0 ? eventDay.events[1].hours + 'u' : '' }})</li>
+                    <li>{{ eventDay.events[0].name }} {{ eventDay.events[0].hours > 0 ? '(' + eventDay.events[0].hours + 'u)' : '' }}</li>
+                    <li>{{ eventDay.events[1].name }} {{ eventDay.events[1].hours > 0 ? '(' + eventDay.events[1].hours + 'u)' : '' }}</li>
+                    <li v-if="!eventDay.isHoliday">&nbsp;</li>
                 </template>
                 <template v-else>
-                    <li>{{ eventDay.events[0].name }} ({{ eventDay.events[0].hours > 0 ? eventDay.events[0].hours + 'u' : '' }})</li>
-                    <li>En anderen ...</li>
+                    <li>{{ eventDay.events[0].name }} {{ eventDay.events[0].hours > 0 ? '(' + eventDay.events[0].hours + 'u)' : '' }}</li>
+                    <li>{{ eventDay.events[1].name }} {{ eventDay.events[1].hours > 0 ? '(' + eventDay.events[1].hours + 'u)' : '' }}</li>
+                    <li>{{ eventDay.events[2].name }} {{ eventDay.events[2].hours > 0 ? '(' + eventDay.events[2].hours + 'u)' : '' }}</li>
                 </template>
             </ul>
         </div>

@@ -3,7 +3,9 @@ export class Timesheet {
     constructor() {
         this.timeSheet = {
             2026: {
-                2: 70.95
+                1: 68.35,
+                2: 70.95,
+                3: 72.15,
             }
         };
         // if (localStorage.getItem('settings')) {

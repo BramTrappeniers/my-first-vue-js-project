@@ -15,11 +15,11 @@
       <div class="event-right">
         <div class="event-types">
           <div v-for="type in workTypes" :class="{ 'active': selectedCell.hasEvent(type.name) }">
-            <div :key="type.name" @click="selectType(type)">
+            <div :key="type.name" @click="selectType(selectedCell.getEvent(type.name) || type)">
               {{ type.name }}
             </div>  
-            <div v-if="selectedCell.hasEvent(type.name) && type.name.toLowerCase() !== 'werkdag'">
-              Aantal uren {{ type.name.toLowerCase() }}: <input v-model="type.hours" type="number" min="0" max="24" step="0.5">
+            <div v-if="selectedCell.getEvent(type.name) && type.name.toLowerCase() !== 'werkdag'">
+              Aantal uren {{ type.name.toLowerCase() }}: <input v-model="selectedCell.getEvent(type.name).hours" type="number" min="0" max="24" step="0.5">
             </div>
           </div>
         </div>
@@ -53,6 +53,7 @@ export default {
       new WorkEvent('Vakantie'),
       new WorkEvent('Opleiding', 1),
       new WorkEvent('Vergadering', 2.5),
+      new WorkEvent('Inhaalrust'),
     ];
 
     return {

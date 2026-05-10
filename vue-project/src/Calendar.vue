@@ -193,6 +193,10 @@ ul {
 .out-of-current-month {
   color: #AAAAB1;
 }
+.holiday {
+  color: darkblue;
+  background-color: aliceblue;
+}
 
 .year {
   color: #E8E8E8;
