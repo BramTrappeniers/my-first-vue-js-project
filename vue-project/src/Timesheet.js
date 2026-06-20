@@ -1,16 +1,16 @@
 export class Timesheet {
 
     constructor() {
-        this.timeSheet = {
-            2026: {
-                1: 68.35,
-                2: 70.95,
-                3: 72.15,
-            }
-        };
-        // if (localStorage.getItem('settings')) {
-        //     this.settings = JSON.parse(localStorage.getItem('settings')).settings;
-        // }
+        // this.timeSheet = {
+        //     2026: {
+        //         1: 68.35,
+        //         2: 70.95,
+        //         3: 72.15,
+        //     }
+        // };
+        if (localStorage.getItem('settings')) {
+            this.timeSheet = JSON.parse(localStorage.getItem('settings')).settings;
+        }
     }
 
     getTimeSheet(date) {

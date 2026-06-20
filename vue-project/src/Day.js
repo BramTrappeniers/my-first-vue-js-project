@@ -46,7 +46,7 @@ export class Day {
         let totalWorkedTime = 0;
         if (previousDay && previousDay.hasEvent('Werkdag')) {
             if (this.isHoliday) { // holiday
-                totalWorkedTime = this.hasEvent('Werkdag') ? 12.4 : 8.6;
+                totalWorkedTime = this.hasEvent('Werkdag') ? 12.4 : 8.4;  // not working day = 7 CAO uren + 1.4 foute berekening Familiehulp
             } else if (this.date.getDay() === 0) { // Sunday
                 totalWorkedTime = this.hasEvent('Werkdag') ? 18 : 14;
             } else { // Monday to Saturday
